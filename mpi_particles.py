@@ -17,17 +17,15 @@ n_steps = 5
 # determine work distribution between ranks
 n_particles_per_process = int(np.ceil(n_particles / n_ranks))
 x_min = rank / n_ranks
-x_max = (rank + 1) / n_ranks
+x_max = x_min + 1 / n_ranks
 
 # initialize local particles assuming homogeneity
 local_particles = [
     Particle(n_particles_per_process * rank + idx, np.random.uniform(x_min, x_max))
     for idx in range(n_particles_per_process)
 ]
-print(
-    f"initial configuration (rank {rank}):",
-    list(sorted(local_particles, key=lambda p: p.idx)),
-)
+print(f"initial configuration ({rank=}):",
+      list(sorted(local_particles, key=lambda p: p.idx)))
 
 # simulate for a couple of time steps
 for step in range(n_steps):
@@ -41,11 +39,10 @@ for step in range(n_steps):
     for root in range(n_ranks):
         recv_buffer = comm.bcast(local_particles, root=root)
         for particle_new in recv_buffer:
-            if x_min <= particle_new.x and particle_new.x < x_max:
+            if x_min <= particle_new.x < x_max:
                 local_particles_new.append(particle_new)
     local_particles = local_particles_new
 
     print()
-    print(
-        f"step {step} (rank{rank}):", list(sorted(local_particles, key=lambda p: p.idx))
-    )
+    print(f"{step=} ({rank=}):",
+          list(sorted(local_particles, key=lambda p: p.idx)))
