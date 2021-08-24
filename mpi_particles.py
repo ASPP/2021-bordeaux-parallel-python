@@ -2,7 +2,7 @@ from mpi4py import MPI
 import numpy as np
 import time
 
-from lib_particles import Particle, propagate_particle
+from lib_particles import Particle, compute_new_particle_position
 
 
 comm = MPI.COMM_WORLD
@@ -32,12 +32,19 @@ for step in range(n_steps):
 
     # propagate particle positions
     for particle in local_particles:
-        particle = propagate_particle(particle)
+        particle.x = compute_new_particle_position(particle.x)
 
     # communicate particle positions
     local_particles_new = []
     for root in range(n_ranks):
+        # we communicate the list `local_particles` from rank `root` to all
+        # other ranks; all ranks receive the same list from rank `root`, which
+        # is stored in `recv_buffer`; communication is *blocking*, i.e., all
+        # ranks wait here until the have received the data
         recv_buffer = comm.bcast(local_particles, root=root)
+
+        # after the communication is done, we figure out which particles this
+        # rank now needs to keep track off
         for particle_new in recv_buffer:
             if x_min <= particle_new.x < x_max:
                 local_particles_new.append(particle_new)
