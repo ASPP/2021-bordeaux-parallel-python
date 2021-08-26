@@ -11,11 +11,12 @@ class Particle:
         return f"Particle({self.idx}, {np.round(self.x, 3)})"
 
 
-def propagate_particle(particle):
+def compute_new_particle_position(x):
     time.sleep(0.2)  # imitate expensive computation
-    particle.x += np.random.normal(scale=0.02)
-    if particle.x < 0:
-        particle.x = 0.0
-    if particle.x > 1:
-        particle.x = 1.0 - 1e-8
-    return particle
+    x += np.random.normal(scale=0.02)
+    # x += 0.1 + np.random.normal(scale=0.02)
+    if x < 0:
+        x = 0.0
+    if x >= 1:
+        x = 1.0 - 1e-8
+    return x
