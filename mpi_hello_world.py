@@ -1,6 +1,6 @@
 from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
+process = comm.Get_rank()
 
-print(f"Hello world from rank {rank}")
+print(f"Hello world from {process = }")

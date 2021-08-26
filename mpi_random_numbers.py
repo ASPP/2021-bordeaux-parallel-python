@@ -17,6 +17,8 @@ n_time_steps = 5
 # determine work distribution between ranks
 x_min = process / n_processes
 x_max = (process + 1) / n_processes
+
+# generate initial positions
 x = np.random.uniform(x_min, x_max, size=n_particles_per_process)
 
 print(f"{process=}: particle positions {x}")

@@ -5,9 +5,9 @@ import time
 from lib_particles import Particle, compute_new_particle_position
 
 
-comm = MPI.COMM_WORLD
-process = comm.Get_rank()
-n_processes = comm.Get_size()
+comm = MPI.COMM_WORLD  # get MPI communicator
+process = comm.Get_rank()  # get process index
+n_processes = comm.Get_size()  # get total number of processes
 
 # initialize a random number generator for each process
 rng = np.random.RandomState(1235 + process)
@@ -21,7 +21,7 @@ n_time_steps = 5
 x_min = process / n_processes
 x_max = (process + 1) / n_processes
 
-# initialize local particles assuming homogeneity
+# initialize local particles assuming homogeneity across processes
 local_particles = [
     Particle(n_particles_per_process * process + idx, rng.uniform(x_min, x_max))
     for idx in range(n_particles_per_process)
