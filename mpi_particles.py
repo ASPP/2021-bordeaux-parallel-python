@@ -27,7 +27,7 @@ local_particles = [
     for idx in range(n_particles_per_process)
 ]
 print(
-    f"initial configuration ({process=}):",
+    f"initial configuration ({process = }):",
     list(sorted(local_particles, key=lambda p: p.idx)),
 )
 # exit()
@@ -59,6 +59,6 @@ for time_step in range(n_time_steps):
 
     print()
     print(
-        f"{time_step=} ({process=}):",
+        f"{time_step = } ({process = }):",
         list(sorted(local_particles, key=lambda p: p.idx)),
     )
